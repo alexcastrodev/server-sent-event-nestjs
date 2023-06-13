@@ -6,7 +6,7 @@ This project provides a step-by-step guide on how to implement a simple Server S
 SSE is a alternative for websocket, but it works only in one way, the server can send messages to the client, but the client can't send messages to the server.
 
 ### Websocket
-<img src="./.github/events.png" alt='websocket' />
+<img src="./.github/websocket.png" alt='websocket' />
 
 ### Server Sent Event
 
