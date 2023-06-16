@@ -2,22 +2,25 @@ version: '3'
 
 services:
   backend:
-    build:
-      dockerfile: Dockerfile
-      target: development
+    build: .
+    command: ./start.sh
     restart: always
     depends_on:
-      - mysql
-      - redis
+      mysql:
+        condition: service_healthy
     env_file:
       - .env
     ports:
       - "3000:3000"
     volumes:
       - .:/home/node/app
-      - /home/node/app/node_modules
   mysql:
     image: mysql:latest
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 10s
+      retries: 3
     volumes:
       - mysql:/var/lib/mysql
     ports:
