@@ -44,3 +44,76 @@ cd nestjs
 ```bash
 npm install
 ```
+
+# NestJS
+
+# Installation
+
+```bash
+docker-compose up -d
+```
+
+it will create 3 containers:
+
+- nestjs: the nestjs application
+- redis: the redis server
+- mysql: the mysql server
+
+# Install dependencies
+
+```bash
+~ docker exec -it nestjs-app-1 bash
+~ npx prisma generate
+~ npx prisma migrate dev
+~ yarn start:dev
+```
+
+# Running the app
+
+```bash
+~ yarn start:dev
+```
+
+# Pending
+
+- [ ] Fix dockerfile
+
+I have this dockerfile, it install modules in container, but not locally.
+
+I want to install modules locally, because i want the auto complete in my IDE.
+
+```dockerfile
+FROM node:lts-slim
+
+# Install dependencies
+RUN apt-get update && apt-get install -y openssl
+
+# Set working directory
+WORKDIR /home/node/app
+
+# Copy package.json and yarn.lock files
+COPY package.json yarn.lock ./
+
+# Install dependencies
+RUN yarn
+
+# Copy the rest of the application code
+COPY . .
+
+# Install NestJS CLI globally
+RUN yarn global add @nestjs/cli
+
+# Generate Prisma client
+RUN yarn prisma generate
+
+# Build the application
+RUN yarn build
+
+# Expose the port
+EXPOSE 3000
+
+# Set the entrypoint command
+CMD ["yarn", "start"]
+```
+
+- [ ] Check hot reload

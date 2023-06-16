@@ -14,3 +14,5 @@ services:
       MYSQL_DATABASE: nest
       MYSQL_USER: app
       MYSQL_PASSWORD: app
+  redis:
+    image: redis:latest
