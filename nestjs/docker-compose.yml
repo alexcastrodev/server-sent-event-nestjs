@@ -1,14 +1,27 @@
 version: '3'
 
 services:
-  app:
-    build: .
+  backend:
+    build:
+      dockerfile: Dockerfile
+      target: development
+    restart: always
+    depends_on:
+      - mysql
+      - redis
+    env_file:
+      - .env
     ports:
       - "3000:3000"
     volumes:
       - .:/home/node/app
+      - /home/node/app/node_modules
   mysql:
     image: mysql:latest
+    volumes:
+      - mysql:/var/lib/mysql
+    ports:
+      - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: nest
@@ -16,3 +29,7 @@ services:
       MYSQL_PASSWORD: app
   redis:
     image: redis:latest
+
+volumes:
+  mysql:
+    name: mysql-data
