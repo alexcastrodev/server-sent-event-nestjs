@@ -1,73 +1,121 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
-
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+# Project Name: Server Sent Event Implementation with Express and NestJS
 
 ## Description
+This project provides a step-by-step guide on how to implement a simple Server Sent Event (SSE) using two popular Node.js frameworks: Express and NestJS. SSE is a technology that enables a server to push real-time updates to the client, allowing for a bi-directional communication channel over a single HTTP connection.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+SSE is a alternative for websocket, but it works only in one way, the server can send messages to the client, but the client can't send messages to the server.
 
-## Installation
+### Websocket
+<img src="./.github/websocket.png" alt='websocket' />
 
-```bash
-$ yarn install
-```
+### Server Sent Event
 
-## Running the app
+<img src="./.github/sse.png" alt='sse' />
 
-```bash
-# development
-$ yarn run start
+## Explanation
 
-# watch mode
-$ yarn run start:dev
+First, i created the express simple example to check the SSE implementation, then i created the nestjs example to check the SSE implementation.
 
-# production mode
-$ yarn run start:prod
-```
+<img src="./.github/events.png" alt='express-implementation' />
 
-## Test
+## Getting Started
+Follow the steps below to set up and run the project:
+
+1. Clone the repository:
 
 ```bash
-# unit tests
-$ yarn run test
-
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
+git clone https://github.com/AlexcastroDev/server-sent-event-nestjs
 ```
 
-## Support
+2. Change into the project directory:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+cd express
+```
 
-## Stay in touch
+or 
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```bash
+cd nestjs
+```
 
-## License
+3. Install the dependencies:
 
-Nest is [MIT licensed](LICENSE).
+```bash
+npm install
+```
+
+# NestJS
+
+<img src="./.github/sse-nest.png" alt='nestjs-implementation' />
+
+# Installation
+
+```bash
+docker-compose up -d
+```
+
+it will create 3 containers:
+
+- nestjs: the nestjs application
+- redis: the redis server
+- mysql: the mysql server
+
+# Install dependencies
+
+```bash
+~ docker exec -it nestjs-app-1 bash
+~ npx prisma generate
+~ npx prisma migrate dev
+~ yarn start:dev
+```
+
+# Running the app
+
+```bash
+~ yarn start:dev
+```
+
+# Pending
+
+- [ ] Fix dockerfile
+
+I have this dockerfile, it install modules in container, but not locally.
+
+I want to install modules locally, because i want the auto complete in my IDE.
+
+```dockerfile
+FROM node:lts-slim
+
+# Install dependencies
+RUN apt-get update && apt-get install -y openssl
+
+# Set working directory
+WORKDIR /home/node/app
+
+# Copy package.json and yarn.lock files
+COPY package.json yarn.lock ./
+
+# Install dependencies
+RUN yarn
+
+# Copy the rest of the application code
+COPY . .
+
+# Install NestJS CLI globally
+RUN yarn global add @nestjs/cli
+
+# Generate Prisma client
+RUN yarn prisma generate
+
+# Build the application
+RUN yarn build
+
+# Expose the port
+EXPOSE 3000
+
+# Set the entrypoint command
+CMD ["yarn", "start"]
+```
+
+- [ ] Check hot reload
